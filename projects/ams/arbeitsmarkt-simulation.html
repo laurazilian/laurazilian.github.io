@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0;position:relative}</style>
+<title>Arbeitsmarkt-Simulation 2030</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: Bericht in Kapiteln, Text 700px, Grafiken bis 1080px; Szenario-Grafik als zentrales Element nach dem Kurzfazit */
+:root{
+  --bg:#f3f5f6; --surface:#ffffff; --ink:#14202a; --muted:#5a6773; --faint:#c9d1d8; --rule:#dde3e8;
+  --accent:#b3122e; --e0:#23857c; --e1:#b08a2e; --e2:#c4203e;
+  --s0:#7b8794; --s1:#23857c; --s2:#d0711f; --s3:#c4203e; --s4:#4f5fbf; --hist:#14202a;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --f-data:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f151b; --surface:#161f27; --ink:#e7ecf0; --muted:#97a4b0; --faint:#3a4652; --rule:#26313b;
+  --accent:#ff6b7f; --e0:#57c4b8; --e1:#dcb35a; --e2:#ff6b7f;
+  --s0:#8d99a6; --s1:#57c4b8; --s2:#f0a050; --s3:#ff6b7f; --s4:#8e9cff; --hist:#e7ecf0; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f151b; --surface:#161f27; --ink:#e7ecf0; --muted:#97a4b0; --faint:#3a4652; --rule:#26313b;
+  --accent:#ff6b7f; --e0:#57c4b8; --e1:#dcb35a; --e2:#ff6b7f;
+  --s0:#8d99a6; --s1:#57c4b8; --s2:#f0a050; --s3:#ff6b7f; --s4:#8e9cff; --hist:#e7ecf0; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55}
+.wrap{max-width:1080px;margin:0 auto;padding-block:44px 72px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:60px}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.1;text-wrap:balance}
+h1{font-size:clamp(34px,6vw,62px);font-weight:800;font-stretch:80%}
+h2{font-size:clamp(25px,3.4vw,34px);font-weight:750;font-stretch:85%}
+h3{font-size:19px;font-weight:700}
+p{margin:0}
+.txt{max-width:700px;display:flex;flex-direction:column;gap:12px}
+.eyebrow{font:600 12px var(--f-data);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:clamp(18px,2.2vw,21px);color:var(--muted);max-width:760px}
+header{display:flex;flex-direction:column;gap:16px;border-bottom:3px solid var(--accent);padding-bottom:26px}
+section{display:flex;flex-direction:column;gap:20px}
+.panel{background:var(--surface);border:1px solid var(--rule);padding:18px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.panel svg{display:block;width:100%;height:auto;overflow:visible}
+.keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.keys div{background:var(--surface);padding:16px 18px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.keys .v{font:750 clamp(26px,3.5vw,36px)/1.05 var(--f-display);font-stretch:80%;font-variant-numeric:tabular-nums}
+.keys .l{font-size:14.5px;color:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.chip{font:600 13px var(--f-body);border:1px solid var(--rule);background:transparent;color:var(--ink);padding:6px 11px;border-radius:999px;cursor:pointer;display:inline-flex;gap:7px;align-items:center}
+.chip i{width:14px;height:3px;background:var(--c)}
+.chip[aria-pressed="false"]{opacity:.45}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.seg button{font:600 14px var(--f-body);background:transparent;color:var(--muted);border:0;padding:7px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sdesc{font-size:15px;color:var(--muted);min-height:2.6em}
+.sdesc b{color:var(--ink)}
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:middle}
+th{font:600 11.5px var(--f-data);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+td.r,th.r{text-align:right;font-family:var(--f-data);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.grp td{font:600 12px var(--f-data);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:0}
+.dv{position:relative;height:14px;min-width:140px}
+.dv span{position:absolute;top:2px;height:10px}
+.dv::before{content:"";position:absolute;left:0;top:0;bottom:0;border-left:1px solid var(--faint)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:24px;align-items:start}
+.two>*{min-width:0}
+.note{font-size:14px;color:var(--muted)}
+.flow{background:var(--surface);border:1px solid var(--rule);padding:16px;overflow-x:auto}
+.flow svg{display:block;width:100%;min-width:760px;height:auto}
+.flow .bx rect{fill:var(--bg);stroke:var(--faint);stroke-width:1;rx:4}
+.flow .bx rect.pool{fill:var(--surface);stroke:var(--ink);stroke-width:1.5}
+.flow .bx rect.key{fill:var(--surface);stroke:var(--s2);stroke-width:2}
+.flow .bx text{text-anchor:middle;fill:var(--muted);font:13px var(--f-body)}
+.flow .bx tspan.h{fill:var(--ink);font:700 14.5px var(--f-display)}
+.flow .ar path{fill:none;stroke:var(--muted);stroke-width:1.4;marker-end:url(#ah)}
+.flow .ahp{fill:var(--muted)}
+.flow .lb text{fill:var(--muted);font:600 12px var(--f-body)}
+.params{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:15px}
+.params dt{font-family:var(--f-data);font-size:13px;color:var(--muted);white-space:nowrap}
+.params dd{margin:0}
+.caveat{border-left:3px solid var(--e1);padding:12px 16px;background:var(--surface);font-size:15.5px;max-width:760px;display:flex;flex-direction:column;gap:8px}
+.foot{font-size:14px;color:var(--muted);display:flex;flex-direction:column;gap:8px;max-width:760px;border-top:1px solid var(--rule);padding-top:20px}
+.foot a{color:var(--accent)}
+</style>
+</head>
+<body>
+<a href="../../projects.html" style="position:absolute;top:max(10px,env(safe-area-inset-top,0px));left:max(16px,env(safe-area-inset-left,0px));font:600 13px system-ui,sans-serif;color:var(--muted,#5a6773);text-decoration:none;z-index:20">← Laura Zilian · Projects</a>
+
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Agentenbasierte Simulation · AMS OpenData · Szenarien bis 2030</span>
+  <h1>Arbeitsmarkt-Simulation 2030</h1>
+  <p class="lede">32.000 simulierte Arbeitsuchende, jede:r mit Wohnregion, Berufswunsch, Geschlecht und Staatsangehörigkeit, suchen Monat für Monat nach offenen Stellen. Das Modell ist an den echten AMS-Daten kalibriert und an 2024–2026 geprüft. Was passiert, wenn generative KI die Nachfrage nach Büro- und Wissensberufen dämpft?</p>
+</header>
+
+<section>
+  <span class="eyebrow">Kurzfazit</span>
+  <div class="keys" id="keys"></div>
+  <div class="txt">
+    <p>Eine Konjunkturerholung würde die Arbeitslosigkeit bis 2030 um rund 10 % senken. Ein moderater KI-Effekt würde diese Erholung zu drei Vierteln aufzehren: Die Zahl der Arbeitslosen mit Berufswunsch in hoch exponierten Berufen läge um 28 % höher als ohne KI. Im starken KI-Szenario liegt die Arbeitslosigkeit 2030 trotz Erholung über dem heutigen Niveau. Eine gezielte Umschulungsoffensive verringert den Anstieg bei den exponierten Berufen um mehr als die Hälfte, verschiebt einen Teil des Drucks aber auf die Zielberufe.</p>
+  </div>
+</section>
+
+<section>
+  <div class="txt">
+    <span class="eyebrow">Szenarien</span>
+    <h2>Fünf Pfade bis Ende 2030</h2>
+    <p>Arbeitslose laut AMS bis Oktober 2026, danach Simulation (Mittel aus fünf Läufen). Alle Linien sind gleitende 12-Monats-Durchschnitte, damit die Saison nicht überdeckt, worum es geht.</p>
+  </div>
+  <div class="panel">
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Kennzahl"><button type="button" id="k-tot" aria-pressed="true">Alle Arbeitslosen</button><button type="button" id="k-hi" aria-pressed="false">Hoch KI-exponierte Berufe</button></div>
+    </div>
+    <div class="controls" id="chips"></div>
+    <svg id="scen" viewBox="0 0 1000 420" role="img" aria-label="Arbeitslosigkeit 2019 bis 2030 nach Szenario"></svg>
+    <p class="sdesc" id="sdesc"></p>
+  </div>
+</section>
+
+<section>
+  <div class="txt">
+    <span class="eyebrow">Wer ist betroffen?</span>
+    <h2>KI trifft Frauen, Inländer:innen und Höherqualifizierte stärker</h2>
+    <p>Veränderung der Arbeitslosigkeit 2030 gegenüber dem Szenario „Konjunkturerholung“ ohne KI. Die Unterschiede entstehen im Modell nur durch die Berufswünsche und Wohnorte der Gruppen. Es gibt keine gruppenspezifischen Verhaltensannahmen.</p>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th>Gruppe</th><th class="r">Ohne KI 2030</th><th class="r">KI moderat</th><th style="min-width:150px"></th><th class="r">KI stark</th><th class="r">KI + Umschulung</th></tr></thead>
+    <tbody id="imp"></tbody></table></div>
+  <div class="txt">
+    <p><b>Geschlecht:</b> Inländische Frauen haben am häufigsten einen Büroberuf als Berufswunsch und verzeichnen deshalb den größten Anstieg. <b>Herkunft:</b> Ausländische Arbeitslose suchen überwiegend in Reinigung, Gastronomie und Lager. Sie sind vom KI-Effekt weniger betroffen, bleiben aber auf hohem Niveau. <b>Qualifikation:</b> Höher qualifizierte Berufswünsche (Ingenieur:innen, IT, Akademiker:innen) steigen relativ am stärksten. Hilfsberufe sind wegen der „Büro- und Verwaltungshilfsberufe“ ebenfalls betroffen. <b>Regionen:</b> Die Unterschiede sind kleiner als zwischen Gruppen. Niederösterreich und Vorarlberg liegen leicht vorne, Tirol mit seinem Tourismus-Schwerpunkt am Ende.</p>
+  </div>
+</section>
+
+<section>
+  <div class="txt">
+    <span class="eyebrow">Modell</span>
+    <h2>Wie die Simulation funktioniert</h2>
+    <p>Jeder Agent steht für 10 arbeitslose Personen. Die Ausgangsbevölkerung stammt aus dem AMS-Bestand nach Beruf, Bundesland, Geschlecht und Staatsangehörigkeit. In jedem Monat durchläuft jeder Agent dieselben Schritte:</p>
+  </div>
+  <div class="flow">
+  <svg viewBox="0 0 980 340" role="img" aria-label="Ablauf der Simulation je Monat: Zugänge, Matching mit offenen Stellen, Abgänge, Flexibilisierung und Umschulung">
+    <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ahp"/></marker></defs>
+    <g class="ar">
+      <path d="M115,102 C115,160 220,162 296,162"/>
+      <path d="M395,134 L395,76"/>
+      <path d="M490,41 C540,41 575,90 600,130"/>
+      <path d="M685,72 L685,130"/>
+      <path d="M490,170 L556,170"/>
+      <path d="M770,170 L806,170"/>
+      <path d="M450,206 C450,296 620,296 806,296"/>
+      <path d="M340,206 C340,262 260,285 214,285"/>
+      <path d="M115,250 C115,190 220,188 296,188"/>
+    </g>
+    <g class="lb">
+      <text x="403" y="110">ab 4 Monaten</text>
+      <text x="788" y="160" text-anchor="middle">Job</text>
+      <text x="640" y="286">konstante Rate</text>
+      <text x="336" y="262" text-anchor="end">Szenario S4</text>
+      <text x="124" y="226">neuer Berufswunsch</text>
+    </g>
+    <g class="bx">
+      <rect x="20" y="30" width="190" height="72"/><text x="115" y="56"><tspan class="h" x="115">Neue Arbeitslose</tspan><tspan x="115" dy="19">AMS-Zugänge je Beruf,</tspan><tspan x="115" dy="17">Region und Gruppe</tspan></text>
+      <rect x="300" y="10" width="190" height="62"/><text x="395" y="36"><tspan class="h" x="395">Flexibel</tspan><tspan x="395" dy="19">sucht auch in verwandten Berufen</tspan></text>
+      <rect x="600" y="10" width="170" height="62"/><text x="685" y="36"><tspan class="h" x="685">Offene Stellen</tspan><tspan x="685" dy="19">je Beruf × Bundesland</tspan></text>
+      <rect class="pool" x="300" y="134" width="190" height="72"/><text x="395" y="164"><tspan class="h" x="395">Pool der Arbeitsuchenden</tspan><tspan x="395" dy="19">Dauer zählt mit</tspan></text>
+      <rect class="key" x="560" y="134" width="210" height="72"/><text x="665" y="158"><tspan class="h" x="665">Matching</tspan><tspan x="665" dy="19">A · (V/U)^0,3 · Saison</tspan><tspan x="665" dy="17">· e^(−0,02 · Dauer)</tspan></text>
+      <rect x="810" y="134" width="150" height="72"/><text x="885" y="174"><tspan class="h" x="885">Abgang in Job</tspan></text>
+      <rect x="810" y="262" width="150" height="68"/><text x="885" y="288"><tspan class="h" x="885">Sonstiger Abgang</tspan><tspan x="885" dy="19">Pension, Krankheit, Rückzug</tspan></text>
+      <rect x="20" y="250" width="190" height="70"/><text x="115" y="278"><tspan class="h" x="115">Umschulung, 6 Monate</tspan><tspan x="115" dy="19">Ziel: Engpassberuf der Region</tspan></text>
+    </g>
+  </svg>
+  </div>
+  <div class="two">
+    <dl class="params">
+      <dt>Matching</dt><dd>Jobfindungsrate je Agent = A<sub>Feld</sub> · (V/U)<sup>η</sup> · Saisonfaktor · e<sup>−0,02·Dauer</sup>. V/U ist die Arbeitsmarktenge im eigenen Beruf und Bundesland. Stellen in anderen Bundesländern zählen mit 4 %.</dd>
+      <dt>Flexibilität</dt><dd>Ab 4 Monaten Arbeitslosigkeit werden Agenten mit 10 % pro Monat flexibel und suchen dann zusätzlich in ihrer Berufsabteilung (Effizienz 60 %).</dd>
+      <dt>Kalibrierung</dt><dd>A je Berufsfeld so, dass der simulierte Bestand Nov 2023 – Okt 2024 dem beobachteten entspricht (Einschwingen ab Okt 2022). η = 0,3 aus dem besten Regionen-Fit gewählt (getestet: 0,15 / 0,3 / 0,5).</dd>
+      <dt>Annahmen</dt><dd>55 % der AMS-Abgänge sind Jobaufnahmen. Saisonfaktoren je Feld aus dem Kalibrierjahr. Offene Stellen im Szenario sind exogen.</dd>
+    </dl>
+    <div class="tbl"><table>
+      <thead><tr><th>Szenario</th><th>Annahmen ab Nov 2026</th></tr></thead>
+      <tbody id="scentbl"></tbody></table></div>
+  </div>
+</section>
+
+<section>
+  <div class="txt">
+    <span class="eyebrow">Validierung</span>
+    <h2>Trifft das Modell die Wirklichkeit?</h2>
+    <p>Test außerhalb der Kalibrierung: Das Modell startet im Oktober 2024 und bekommt nur die tatsächlichen Zugänge und offenen Stellen. Den Bestand an Arbeitslosen muss es selbst erzeugen.</p>
+  </div>
+  <div class="two">
+    <div class="panel">
+      <b>Arbeitslose gesamt, Nov 2024 – Okt 2026</b>
+      <div class="controls"><span class="chip" style="--c:var(--hist);cursor:default"><i></i>AMS (beobachtet)</span><span class="chip" style="--c:var(--s2);cursor:default"><i></i>Simulation</span></div>
+      <svg id="bt" viewBox="0 0 520 280" role="img" aria-label="Backtest beobachtet gegen simuliert"></svg>
+      <p class="note">Die Abweichung liegt über zwei Jahre bei höchstens 5,5 %, inklusive der Saisonausschläge.</p>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Okt 2026</th><th class="r">Simuliert</th><th class="r">AMS</th><th class="r">Abw.</th></tr></thead>
+      <tbody id="btrows"></tbody></table></div>
+  </div>
+  <div class="caveat">
+    <b>Was das Modell gut und was es schlecht kann</b>
+    <p>Gut getroffen werden das Gesamtniveau, der Verlauf über die Saison und die Verteilung auf die drei KI-Expositionsgruppen (Fehler unter 1,5 %). Bei Gruppen und Regionen bleiben systematische Abweichungen: Inländische Männer unterschätzt das Modell um 13 %, ausländische Frauen überschätzt es um 9 %, Tirol um 18 %. Berufswunsch und Region allein erklären die Unterschiede also nicht vollständig. Faktoren wie Betreuungspflichten, Sprache, Gesundheit, Wiedereinstellungszusagen oder Diskriminierung fehlen im Modell. Die Dauerverteilung ist zu kurz (Langzeitarbeitslose werden unterschätzt). Daher weist der Bericht keine Langzeitarbeitslosigkeit aus.</p>
+  </div>
+</section>
+
+<section>
+  <div class="caveat">
+    <b>Lesart der Szenarien</b>
+    <p>Die KI-Annahmen sind gesetzte Größenordnungen, keine Prognosen. Sie folgen dem OECD-Befund, dass Büro-, Verwaltungs- und Wissensberufe am stärksten exponiert sind, das Tempo ist aber offen. Die Nachfrageseite ist exogen: Das Modell lässt keine neuen Berufe entstehen, keine Löhne reagieren und keine Produktivitätsgewinne in neue Stellen fließen. Es zeigt deshalb eher eine Obergrenze des Drucks auf exponierte Berufe. In Umschulung befindliche Personen (S4: rund 10.000) zählen wie in der AMS-Statistik nicht als arbeitslos.</p>
+  </div>
+</section>
+
+<div class="foot">
+  <p><b>Daten:</b> AMS Österreich, OpenData über <a href="https://www.data.gv.at/applications/25d96fad-8f12-4500-a889-9b964cc8edbb?locale=de">data.gv.at (ALMODE)</a>: Arbeitslose nach Berufswunsch (Bestand, Zugang, Abgang), offene Stellen nach Berufen, je AMS-Geschäftsstelle, Jänner 2019 – Oktober 2026.</p>
+  <p><b>KI-Exposition:</b> eigene dreistufige Einstufung der Berufsfelder, angelehnt an das <a href="https://www.oecd-ilibrary.org/en/publications/the-oecd-ai-exposure-measure_f3da0f0a-en">OECD AI Exposure Measure</a>.</p>
+  <p><b>Code:</b> scripts/abm.py (Python, numpy/pandas), 5 Läufe je Szenario, Maßstab 1:10.</p>
+</div>
+</div>
+
+<script src="../../assets/d3.min.js"></script>
+<script>
+const D = {"hist_months": ["2019-01", "2019-02", "2019-03", "2019-04", "2019-05", "2019-06", "2019-07", "2019-08", "2019-09", "2019-10", "2019-11", "2019-12", "2020-01", "2020-02", "2020-03", "2020-04", "2020-05", "2020-06", "2020-07", "2020-08", "2020-09", "2020-10", "2020-11", "2020-12", "2021-01", "2021-02", "2021-03", "2021-04", "2021-05", "2021-06", "2021-07", "2021-08", "2021-09", "2021-10", "2021-11", "2021-12", "2022-01", "2022-02", "2022-03", "2022-04", "2022-05", "2022-06", "2022-07", "2022-08", "2022-09", "2022-10", "2022-11", "2022-12", "2023-01", "2023-02", "2023-03", "2023-04", "2023-05", "2023-06", "2023-07", "2023-08", "2023-09", "2023-10", "2023-11", "2023-12", "2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06", "2024-07", "2024-08", "2024-09", "2024-10", "2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10"], "hist_total": [null, null, null, null, null, null, null, null, null, null, null, 300532.0, 299488.0, 298715.0, 315021.0, 333532.0, 349531.0, 361943.0, 371218.0, 378877.0, 385068.0, 390886.0, 398441.0, 407518.0, 416858.0, 425383.0, 415444.0, 401849.0, 389002.0, 378602.0, 370211.0, 363116.0, 356662.0, 349281.0, 340852.0, 330612.0, 319367.0, 308211.0, 298305.0, 289931.0, 283344.0, 278357.0, 274439.0, 271342.0, 268701.0, 267030.0, 264408.0, 262220.0, 260936.0, 260243.0, 260051.0, 260388.0, 261255.0, 262138.0, 263384.0, 264428.0, 265654.0, 266913.0, 268433.0, 270086.0, 272315.0, 274616.0, 277286.0, 279703.0, 281788.0, 283850.0, 285913.0, 288104.0, 290432.0, 292846.0, 295271.0, 297301.0, 299199.0, 301404.0, 303524.0, 305593.0, 307565.0, 309653.0, 310959.0, 312178.0, 313853.0, 315348.0, 316694.0, 317539.0, 318708.0, 319550.0, 320081.0, 320788.0, 321249.0, 321825.0, 322568.0, 323404.0, 324024.0, 324356.0], "hist_hi": [null, null, null, null, null, null, null, null, null, null, null, 64078.0, 64012.0, 63955.0, 65848.0, 68644.0, 71439.0, 73748.0, 75616.0, 77256.0, 78673.0, 79993.0, 81474.0, 82995.0, 84491.0, 85865.0, 85037.0, 83099.0, 80963.0, 79151.0, 77590.0, 76209.0, 74888.0, 73472.0, 71845.0, 70130.0, 68254.0, 66470.0, 64822.0, 63394.0, 62186.0, 61185.0, 60293.0, 59580.0, 58946.0, 58514.0, 58089.0, 57712.0, 57516.0, 57401.0, 57403.0, 57514.0, 57745.0, 57982.0, 58309.0, 58597.0, 58970.0, 59309.0, 59708.0, 60175.0, 60736.0, 61331.0, 62010.0, 62637.0, 63227.0, 63828.0, 64446.0, 65090.0, 65748.0, 66524.0, 67332.0, 68162.0, 68969.0, 69752.0, 70492.0, 71290.0, 72063.0, 72843.0, 73490.0, 74134.0, 74911.0, 75647.0, 76347.0, 76982.0, 77666.0, 78326.0, 78995.0, 79618.0, 80186.0, 80767.0, 81350.0, 81924.0, 82463.0, 82925.0], "scen_months": ["2026-11", "2026-12", "2027-01", "2027-02", "2027-03", "2027-04", "2027-05", "2027-06", "2027-07", "2027-08", "2027-09", "2027-10", "2027-11", "2027-12", "2028-01", "2028-02", "2028-03", "2028-04", "2028-05", "2028-06", "2028-07", "2028-08", "2028-09", "2028-10", "2028-11", "2028-12", "2029-01", "2029-02", "2029-03", "2029-04", "2029-05", "2029-06", "2029-07", "2029-08", "2029-09", "2029-10", "2029-11", "2029-12", "2030-01", "2030-02", "2030-03", "2030-04", "2030-05", "2030-06", "2030-07", "2030-08", "2030-09", "2030-10", "2030-11", "2030-12"], "scen": {"S0": {"name": "Fortschreibung", "desc": "Stellen und Zugänge bleiben auf dem Niveau der letzten 12 Monate.", "total": [324257.0, 324005.0, 323711.0, 323251.0, 323528.0, 323202.0, 322904.0, 322474.0, 322279.0, 322296.0, 322206.0, 322179.0, 322219.0, 322239.0, 322207.0, 322090.0, 322141.0, 322282.0, 322460.0, 322574.0, 322715.0, 322865.0, 322992.0, 323192.0, 323263.0, 323267.0, 323279.0, 323365.0, 323328.0, 323237.0, 323169.0, 323242.0, 323329.0, 323335.0, 323318.0, 323275.0, 323312.0, 323336.0, 323432.0, 323553.0, 323663.0, 323649.0, 323572.0, 323486.0, 323364.0, 323248.0, 323140.0, 323079.0, 323004.0, 323118.0], "hi": [83286.0, 83632.0, 83993.0, 84270.0, 84540.0, 84678.0, 84846.0, 84975.0, 85166.0, 85438.0, 85685.0, 85971.0, 86180.0, 86366.0, 86498.0, 86611.0, 86723.0, 86839.0, 86938.0, 87066.0, 87229.0, 87344.0, 87397.0, 87463.0, 87478.0, 87432.0, 87414.0, 87364.0, 87337.0, 87304.0, 87275.0, 87257.0, 87222.0, 87221.0, 87230.0, 87200.0, 87210.0, 87272.0, 87323.0, 87414.0, 87451.0, 87442.0, 87410.0, 87389.0, 87339.0, 87274.0, 87216.0, 87197.0, 87147.0, 87088.0], "lo": [324081.0, 323643.0, 323075.0, 322409.0, 322415.0, 321797.0, 321355.0, 320802.0, 320486.0, 320297.0, 319988.0, 319822.0, 319752.0, 319802.0, 319811.0, 319578.0, 319507.0, 319672.0, 319836.0, 319936.0, 320086.0, 320256.0, 320442.0, 320631.0, 320786.0, 320709.0, 320651.0, 320712.0, 320830.0, 320822.0, 320771.0, 320775.0, 320874.0, 320774.0, 320688.0, 320597.0, 320623.0, 320790.0, 321008.0, 321368.0, 321674.0, 321742.0, 321746.0, 321770.0, 321653.0, 321628.0, 321602.0, 321648.0, 321660.0, 321687.0], "up": [324405.0, 324415.0, 324342.0, 324178.0, 324831.0, 324794.0, 324605.0, 324384.0, 324343.0, 324498.0, 324547.0, 324735.0, 324803.0, 324769.0, 324771.0, 324638.0, 324633.0, 324767.0, 325018.0, 325049.0, 325119.0, 325445.0, 325731.0, 326101.0, 326226.0, 326297.0, 326238.0, 326196.0, 326027.0, 325768.0, 325765.0, 325941.0, 326138.0, 326070.0, 325941.0, 325705.0, 325762.0, 325686.0, 325706.0, 325834.0, 325785.0, 325703.0, 325452.0, 325248.0, 325121.0, 324951.0, 324874.0, 324814.0, 324677.0, 324777.0], "y2030": 323117.5, "hi2030": 87087.83333333333, "train2030": 0.0}, "S1": {"name": "Konjunkturerholung", "desc": "Offene Stellen +20 % bis Ende 2028, Zugänge −5 %. Keine KI-Effekte.", "total": [324256.0, 324011.0, 323616.0, 322928.0, 322924.0, 322281.0, 321655.0, 320828.0, 320158.0, 319579.0, 318779.0, 317902.0, 316997.0, 315826.0, 314553.0, 313276.0, 312108.0, 310933.0, 309782.0, 308586.0, 307338.0, 306098.0, 304850.0, 303696.0, 302514.0, 301228.0, 299935.0, 298765.0, 297710.0, 296715.0, 295770.0, 295080.0, 294529.0, 293934.0, 293475.0, 293044.0, 292694.0, 292441.0, 292178.0, 292018.0, 291906.0, 291782.0, 291727.0, 291551.0, 291365.0, 291385.0, 291354.0, 291336.0, 291251.0, 291285.0], "hi": [83300.0, 83649.0, 83979.0, 84201.0, 84372.0, 84382.0, 84403.0, 84415.0, 84486.0, 84572.0, 84557.0, 84528.0, 84409.0, 84217.0, 83991.0, 83748.0, 83550.0, 83383.0, 83192.0, 82985.0, 82722.0, 82506.0, 82334.0, 82201.0, 82037.0, 81841.0, 81610.0, 81393.0, 81144.0, 80862.0, 80585.0, 80381.0, 80216.0, 80009.0, 79805.0, 79603.0, 79401.0, 79275.0, 79162.0, 79082.0, 79048.0, 79032.0, 79037.0, 78956.0, 78869.0, 78843.0, 78798.0, 78786.0, 78802.0, 78793.0], "lo": [324061.0, 323624.0, 323034.0, 322164.0, 321948.0, 321107.0, 320334.0, 319356.0, 318468.0, 317694.0, 316651.0, 315618.0, 314510.0, 313243.0, 311960.0, 310679.0, 309466.0, 308267.0, 307112.0, 305932.0, 304779.0, 303624.0, 302405.0, 301092.0, 300191.0, 299019.0, 297836.0, 296731.0, 295661.0, 294512.0, 293437.0, 292636.0, 291902.0, 291109.0, 290462.0, 289944.0, 289390.0, 289078.0, 288617.0, 288456.0, 288381.0, 288311.0, 288292.0, 288057.0, 287901.0, 288000.0, 288250.0, 288509.0, 288692.0, 288835.0], "up": [324391.0, 324449.0, 324386.0, 324005.0, 324515.0, 324240.0, 323736.0, 323031.0, 322523.0, 322114.0, 321496.0, 320859.0, 320179.0, 318977.0, 317637.0, 316348.0, 315122.0, 313868.0, 312864.0, 311778.0, 310599.0, 309319.0, 308098.0, 306955.0, 305640.0, 304208.0, 302844.0, 301548.0, 300191.0, 299048.0, 297980.0, 297222.0, 296650.0, 296193.0, 295876.0, 295538.0, 295204.0, 295174.0, 295025.0, 294948.0, 294884.0, 294856.0, 294875.0, 294768.0, 294637.0, 294604.0, 294446.0, 294261.0, 293996.0, 293778.0], "y2030": 291284.8333333333, "hi2030": 78792.83333333333, "train2030": 0.0}, "S2": {"name": "Erholung + KI moderat", "desc": "Wie S1; zusätzlich Stellen in hoch exponierten Berufen −8 % p. a., mittel −2 % p. a.; Zugänge aus hoch exponierten Berufen +5 % p. a.", "total": [324241.0, 323859.0, 323294.0, 322574.0, 322656.0, 322101.0, 321551.0, 320893.0, 320363.0, 319981.0, 319423.0, 318989.0, 318548.0, 318054.0, 317556.0, 316956.0, 316441.0, 315952.0, 315540.0, 315069.0, 314637.0, 314308.0, 313916.0, 313452.0, 312943.0, 312302.0, 311684.0, 311158.0, 310597.0, 310060.0, 309627.0, 309326.0, 309214.0, 309079.0, 309029.0, 309032.0, 309134.0, 309458.0, 309809.0, 310196.0, 310683.0, 311192.0, 311634.0, 312117.0, 312667.0, 313218.0, 313802.0, 314398.0, 315021.0, 315541.0], "hi": [83286.0, 83607.0, 83910.0, 84143.0, 84378.0, 84469.0, 84590.0, 84738.0, 84951.0, 85231.0, 85490.0, 85817.0, 86073.0, 86353.0, 86640.0, 86916.0, 87171.0, 87446.0, 87752.0, 88063.0, 88386.0, 88745.0, 89080.0, 89361.0, 89658.0, 89932.0, 90225.0, 90514.0, 90824.0, 91145.0, 91446.0, 91724.0, 92091.0, 92509.0, 92906.0, 93359.0, 93826.0, 94362.0, 94881.0, 95390.0, 95926.0, 96476.0, 97006.0, 97602.0, 98177.0, 98766.0, 99380.0, 99996.0, 100575.0, 101146.0], "lo": [324064.0, 323548.0, 322813.0, 321846.0, 321575.0, 320812.0, 320125.0, 319230.0, 318522.0, 317978.0, 317277.0, 316709.0, 316110.0, 315613.0, 315178.0, 314652.0, 314294.0, 313858.0, 313392.0, 312922.0, 312389.0, 311846.0, 311226.0, 310518.0, 310055.0, 309377.0, 308803.0, 308319.0, 307765.0, 307219.0, 306672.0, 306284.0, 306137.0, 306042.0, 306084.0, 306262.0, 306483.0, 306822.0, 307052.0, 307382.0, 307885.0, 308415.0, 308893.0, 309482.0, 310032.0, 310626.0, 311260.0, 311944.0, 312550.0, 313028.0], "up": [324430.0, 324480.0, 324282.0, 323905.0, 324375.0, 324133.0, 323730.0, 323326.0, 322914.0, 322617.0, 322144.0, 321871.0, 321457.0, 320752.0, 320141.0, 319457.0, 318970.0, 318523.0, 318142.0, 317675.0, 317409.0, 317176.0, 316912.0, 316516.0, 315951.0, 315255.0, 314448.0, 313852.0, 313162.0, 312423.0, 312109.0, 311812.0, 311672.0, 311757.0, 311863.0, 311874.0, 312014.0, 312334.0, 312778.0, 313146.0, 313533.0, 313977.0, 314255.0, 314702.0, 315231.0, 315522.0, 315892.0, 316333.0, 316892.0, 317392.0], "y2030": 315541.3333333333, "hi2030": 101146.0, "train2030": 0.0}, "S3": {"name": "Erholung + KI stark", "desc": "Wie S2, aber Stellen hoch exponiert −15 % p. a., mittel −4 % p. a.; Zugänge +10 % p. a.", "total": [324227.0, 323949.0, 323550.0, 322963.0, 323144.0, 322692.0, 322266.0, 321772.0, 321570.0, 321565.0, 321285.0, 321104.0, 321036.0, 320864.0, 320637.0, 320325.0, 320112.0, 319959.0, 319889.0, 319792.0, 319701.0, 319668.0, 319719.0, 319821.0, 319839.0, 319789.0, 319771.0, 319929.0, 320156.0, 320405.0, 320762.0, 321284.0, 321939.0, 322603.0, 323353.0, 324154.0, 325008.0, 326021.0, 327258.0, 328538.0, 329845.0, 331195.0, 332530.0, 333867.0, 335237.0, 336701.0, 338232.0, 339743.0, 341255.0, 342847.0], "hi": [83290.0, 83646.0, 84014.0, 84344.0, 84722.0, 84984.0, 85260.0, 85627.0, 86121.0, 86753.0, 87315.0, 87956.0, 88596.0, 89310.0, 90026.0, 90727.0, 91425.0, 92138.0, 92900.0, 93596.0, 94346.0, 95138.0, 95992.0, 96842.0, 97654.0, 98431.0, 99259.0, 100081.0, 100947.0, 101804.0, 102656.0, 103606.0, 104576.0, 105575.0, 106535.0, 107573.0, 108610.0, 109713.0, 110912.0, 112114.0, 113324.0, 114615.0, 115931.0, 117251.0, 118663.0, 120131.0, 121580.0, 123027.0, 124488.0, 126029.0], "lo": [324072.0, 323643.0, 323150.0, 322374.0, 322365.0, 321769.0, 321227.0, 320640.0, 320243.0, 320119.0, 319664.0, 319330.0, 319195.0, 318987.0, 318628.0, 318148.0, 317714.0, 317462.0, 317238.0, 317069.0, 317014.0, 316873.0, 316978.0, 317064.0, 317104.0, 317014.0, 317038.0, 317237.0, 317521.0, 317625.0, 317778.0, 318002.0, 318567.0, 319134.0, 319732.0, 320413.0, 321193.0, 322243.0, 323433.0, 324818.0, 326261.0, 327825.0, 329462.0, 331054.0, 332603.0, 334291.0, 336023.0, 337670.0, 339353.0, 340933.0], "up": [324410.0, 324410.0, 324303.0, 323988.0, 324470.0, 324293.0, 323983.0, 323753.0, 323790.0, 323954.0, 323840.0, 323798.0, 323703.0, 323538.0, 323372.0, 323161.0, 322929.0, 322761.0, 322764.0, 322528.0, 322348.0, 322313.0, 322299.0, 322405.0, 322358.0, 322220.0, 322019.0, 322046.0, 322232.0, 322517.0, 322915.0, 323513.0, 324214.0, 324928.0, 325915.0, 326837.0, 327980.0, 329072.0, 330564.0, 332019.0, 333246.0, 334451.0, 335704.0, 337078.0, 338374.0, 339738.0, 341054.0, 342601.0, 343953.0, 345330.0], "y2030": 342847.3333333333, "hi2030": 126028.83333333333, "train2030": 0.0}, "S4": {"name": "KI moderat + Umschulung", "desc": "Wie S2; zusätzlich gehen monatlich 3 % der hoch exponierten Arbeitslosen (ab 3 Monaten) in eine 6-monatige Umschulung in einen Engpassberuf ihrer Region.", "total": [324100.0, 323567.0, 322819.0, 321718.0, 321302.0, 320185.0, 319235.0, 318188.0, 317350.0, 316692.0, 315884.0, 315069.0, 314343.0, 313585.0, 312787.0, 312203.0, 311725.0, 311289.0, 310715.0, 310156.0, 309612.0, 309022.0, 308377.0, 307681.0, 307045.0, 306368.0, 305820.0, 305199.0, 304664.0, 304195.0, 303792.0, 303446.0, 303243.0, 303164.0, 303103.0, 303199.0, 303406.0, 303765.0, 304096.0, 304475.0, 304891.0, 305354.0, 305871.0, 306359.0, 306861.0, 307385.0, 307973.0, 308606.0, 309206.0, 309850.0], "hi": [83145.0, 83217.0, 83199.0, 83000.0, 82757.0, 82353.0, 81988.0, 81593.0, 81248.0, 80942.0, 80599.0, 80248.0, 79948.0, 79701.0, 79485.0, 79365.0, 79338.0, 79348.0, 79309.0, 79323.0, 79360.0, 79438.0, 79495.0, 79552.0, 79654.0, 79798.0, 80007.0, 80211.0, 80397.0, 80578.0, 80781.0, 81016.0, 81314.0, 81632.0, 81926.0, 82290.0, 82661.0, 83073.0, 83488.0, 83891.0, 84300.0, 84775.0, 85253.0, 85706.0, 86161.0, 86656.0, 87192.0, 87756.0, 88298.0, 88874.0], "lo": [323926.0, 323131.0, 322118.0, 320896.0, 320308.0, 319000.0, 317879.0, 316650.0, 315523.0, 314609.0, 313486.0, 312255.0, 311523.0, 310953.0, 310289.0, 309673.0, 309250.0, 308750.0, 308193.0, 307598.0, 307154.0, 306705.0, 306224.0, 305840.0, 305270.0, 304561.0, 303994.0, 303378.0, 302847.0, 302389.0, 301916.0, 301447.0, 301151.0, 301008.0, 300899.0, 301032.0, 301198.0, 301538.0, 301882.0, 302227.0, 302553.0, 302936.0, 303437.0, 304116.0, 304707.0, 305221.0, 305888.0, 306467.0, 307093.0, 307738.0], "up": [324302.0, 324118.0, 323686.0, 322933.0, 323048.0, 322283.0, 321644.0, 320795.0, 320203.0, 319739.0, 319156.0, 318500.0, 317738.0, 316729.0, 315830.0, 315245.0, 314427.0, 313864.0, 313171.0, 312541.0, 311968.0, 311300.0, 310620.0, 309921.0, 309361.0, 308702.0, 308138.0, 307314.0, 306780.0, 306182.0, 305839.0, 305754.0, 305566.0, 305590.0, 305462.0, 305492.0, 305578.0, 305952.0, 306222.0, 306552.0, 306883.0, 307500.0, 307904.0, 308206.0, 308629.0, 309032.0, 309568.0, 310162.0, 310700.0, 311310.0], "y2030": 309849.8333333333, "hi2030": 88873.83333333333, "train2030": 10251.666666666666}}, "bt": {"months": ["2024-11", "2024-12", "2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10"], "sim": [302196.0, 346386.0, 357456.0, 333048.0, 307996.0, 296120.0, 282272.0, 272622.0, 277670.0, 292340.0, 292606.0, 307298.0, 312400.0, 354484.0, 370934.0, 347226.0, 322584.0, 312402.0, 294432.0, 287642.0, 294250.0, 309468.0, 303764.0, 313196.0], "obs": [304201, 352856, 365743, 347424, 316347, 311838, 296140, 288545, 289968, 301421, 299180, 310509, 320351, 363006, 379771, 357518, 322727, 320316, 301676, 295457, 298885, 311448, 306624, 314499], "sim_exp": [[90948.0, 140610.0, 70638.0], [108594.0, 162548.0, 75244.0], [116258.0, 165318.0, 75880.0], [103914.0, 156232.0, 72902.0], [89786.0, 146420.0, 71790.0], [86502.0, 138586.0, 71032.0], [77136.0, 134674.0, 70462.0], [69338.0, 132044.0, 71240.0], [65880.0, 137174.0, 74616.0], [69210.0, 144568.0, 78562.0], [72706.0, 142170.0, 77730.0], [84226.0, 143868.0, 79204.0], [91340.0, 142732.0, 78328.0], [108040.0, 163102.0, 83342.0], [118262.0, 167436.0, 85236.0], [105372.0, 158890.0, 82964.0], [91660.0, 149398.0, 81526.0], [89706.0, 141990.0, 80706.0], [79130.0, 136282.0, 79020.0], [71924.0, 135932.0, 79786.0], [69422.0, 141472.0, 83356.0], [73368.0, 149256.0, 86844.0], [75202.0, 144222.0, 84340.0], [85024.0, 143584.0, 84588.0]], "obs_exp": [[92717, 141109, 70375], [111255, 165234, 76367], [119705, 168756, 77282], [109208, 162573, 75643], [91677, 150843, 73827], [90770, 146541, 74527], [81071, 141620, 73449], [74093, 140382, 74070], [70572, 142782, 76614], [73552, 148442, 79427], [76931, 144425, 77824], [87353, 144796, 78360], [95686, 145893, 78772], [112092, 166930, 83984], [122976, 171304, 85491], [110110, 163844, 83564], [89857, 151016, 81854], [90695, 147620, 82001], [79707, 141704, 80265], [73698, 140707, 81052], [71030, 144245, 83610], [74764, 150378, 86306], [76959, 145372, 84293], [85844, 144751, 83904]]}, "bt_rows": [{"dim": "Exposition", "n": "niedrig", "sim": 85024, "obs": 85844, "err": -1.0}, {"dim": "Exposition", "n": "mittel", "sim": 143584, "obs": 144751, "err": -0.8}, {"dim": "Exposition", "n": "hoch", "sim": 84588, "obs": 83904, "err": 0.8}, {"dim": "Gruppe", "n": "Männer Inl.", "sim": 87926, "obs": 101359, "err": -13.3}, {"dim": "Gruppe", "n": "Männer Ausl.", "sim": 64752, "obs": 62493, "err": 3.6}, {"dim": "Gruppe", "n": "Frauen Inl.", "sim": 92306, "obs": 88235, "err": 4.6}, {"dim": "Gruppe", "n": "Frauen Ausl.", "sim": 68212, "obs": 62412, "err": 9.3}, {"dim": "Bundesland", "n": "Burgenland", "sim": 6938, "obs": 8112, "err": -14.5}, {"dim": "Bundesland", "n": "Kärnten", "sim": 16164, "obs": 16637, "err": -2.8}, {"dim": "Bundesland", "n": "Niederösterreich", "sim": 44460, "obs": 46507, "err": -4.4}, {"dim": "Bundesland", "n": "Oberösterreich", "sim": 37852, "obs": 36755, "err": 3.0}, {"dim": "Bundesland", "n": "Salzburg", "sim": 14050, "obs": 13880, "err": 1.2}, {"dim": "Bundesland", "n": "Steiermark", "sim": 35914, "obs": 38166, "err": -5.9}, {"dim": "Bundesland", "n": "Tirol", "sim": 24296, "obs": 20541, "err": 18.3}, {"dim": "Bundesland", "n": "Vorarlberg", "sim": 11586, "obs": 12009, "err": -3.5}, {"dim": "Bundesland", "n": "Wien", "sim": 121936, "obs": 121892, "err": 0.0}], "impact": [{"dim": "Geschlecht × Staatsangehörigkeit", "n": "Männer Inl.", "base": 86482, "mod": 9.2, "strong": 18.7, "train": 7.2}, {"dim": "Geschlecht × Staatsangehörigkeit", "n": "Männer Ausl.", "base": 62937, "mod": 4.8, "strong": 9.5, "train": 3.5}, {"dim": "Geschlecht × Staatsangehörigkeit", "n": "Frauen Inl.", "base": 82040, "mod": 11.8, "strong": 25.5, "train": 9.0}, {"dim": "Geschlecht × Staatsangehörigkeit", "n": "Frauen Ausl.", "base": 59826, "mod": 5.9, "strong": 14.2, "train": 4.5}, {"dim": "Qualifikation des Berufswunsches", "n": "Hilfsniveau", "base": 58744, "mod": 9.8, "strong": 19.3, "train": 2.8}, {"dim": "Qualifikation des Berufswunsches", "n": "Fachniveau", "base": 224657, "mod": 7.3, "strong": 16.0, "train": 7.0}, {"dim": "Qualifikation des Berufswunsches", "n": "Höher/akademisch", "base": 7883, "mod": 26.3, "strong": 54.7, "train": 16.3}, {"dim": "Bundesland", "n": "Burgenland", "base": 6592, "mod": 8.7, "strong": 20.7, "train": 6.9}, {"dim": "Bundesland", "n": "Kärnten", "base": 15434, "mod": 7.4, "strong": 17.4, "train": 4.9}, {"dim": "Bundesland", "n": "Niederösterreich", "base": 43171, "mod": 10.5, "strong": 20.7, "train": 6.8}, {"dim": "Bundesland", "n": "Oberösterreich", "base": 35698, "mod": 8.4, "strong": 18.9, "train": 7.3}, {"dim": "Bundesland", "n": "Salzburg", "base": 13202, "mod": 8.5, "strong": 17.2, "train": 7.3}, {"dim": "Bundesland", "n": "Steiermark", "base": 33666, "mod": 8.4, "strong": 17.2, "train": 6.3}, {"dim": "Bundesland", "n": "Tirol", "base": 21398, "mod": 4.2, "strong": 12.9, "train": 5.1}, {"dim": "Bundesland", "n": "Vorarlberg", "base": 10226, "mod": 10.3, "strong": 16.1, "train": 7.5}, {"dim": "Bundesland", "n": "Wien", "base": 111898, "mod": 8.1, "strong": 17.3, "train": 6.1}], "exp2030": {"S0": [88819, 147211, 87088], "S1": [79991, 132501, 78793], "S2": [79770, 134626, 101146], "S3": [80109, 136710, 126029], "S4": [81552, 139424, 88874]}, "params": {"ETA": 0.3, "SCALE": 10, "JOB_SHARE": 0.55, "DUR": 0.02, "MOB": 0.04, "FLEX_START": 4, "FLEX_P": 0.1, "FLEX_EFF": 0.6, "RUNS": 5}};
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmt = new Intl.NumberFormat('de-AT',{maximumFractionDigits:0});
+const pct = v => (v>0?'+':'')+v.toFixed(1).replace('.',',')+' %';
+const SK = ['S0','S1','S2','S3','S4'];
+const S = D.scen;
+const on = {S0:true,S1:true,S2:true,S3:true,S4:true};
+let metric = 'total', focus = 'S2';
+
+// Kennzahlen
+const s1 = S.S1.y2030, s2 = S.S2.y2030;
+const keys = [
+  [fmt.format(Math.round(S.S0.y2030/1000))+'k', 'Arbeitslose Ø 2030 bei Fortschreibung (Ø 2026: 321k)'],
+  [pct((S.S1.y2030/S.S0.y2030-1)*100), 'durch Konjunkturerholung ohne KI'],
+  [pct((S.S2.hi2030/S.S1.hi2030-1)*100), 'mehr Arbeitslose in hoch KI-exponierten Berufen bei moderatem KI-Effekt'],
+  [pct((S.S4.hi2030/S.S2.hi2030-1)*100), 'Arbeitslose in hoch exponierten Berufen durch eine Umschulungsoffensive (gegenüber KI moderat)']];
+d3.select('#keys').selectAll('div').data(keys).join('div').html(d=>`<span class="v">${d[0]}</span><span class="l">${d[1]}</span>`);
+
+// Szenario-Tabelle
+d3.select('#scentbl').selectAll('tr').data(SK).join('tr').html(k=>`<td style="white-space:nowrap"><span class="chip" style="--c:var(--${k.toLowerCase()});cursor:default;padding:2px 8px"><i></i>${k}</span> ${S[k].name}</td><td>${S[k].desc}</td>`);
+
+// Chips
+const chips = d3.select('#chips').selectAll('button').data(SK).join('button').attr('class','chip').attr('type','button').attr('id',k=>'c'+k)
+  .attr('aria-pressed',true).style('--c',k=>`var(--${k.toLowerCase()})`).html(k=>`<i></i>${S[k].name}`)
+  .on('click',(e,k)=>{ on[k]=!on[k]; e.currentTarget.setAttribute('aria-pressed',on[k]); if(on[k]) focus=k; draw(true); })
+  .on('pointerenter',(e,k)=>{ if(on[k]){ focus=k; draw(false);} });
+d3.select('#k-tot').on('click',()=>{ metric='total'; d3.select('#k-tot').attr('aria-pressed',true); d3.select('#k-hi').attr('aria-pressed',false); draw(true); });
+d3.select('#k-hi').on('click',()=>{ metric='hi'; d3.select('#k-hi').attr('aria-pressed',true); d3.select('#k-tot').attr('aria-pressed',false); draw(true); });
+
+const parse = d3.timeParse('%Y-%m');
+function draw(animate){
+  const svg = d3.select('#scen'); svg.selectAll('*').remove();
+  const W=1000, H=420, m={l:64,r:150,t:16,b:30};
+  const hm = D.hist_months.map(parse), hv = metric==='total'?D.hist_total:D.hist_hi;
+  const sm = D.scen_months.map(parse);
+  const all = hv.filter(v=>v!=null).concat(...SK.filter(k=>on[k]).map(k=>S[k][metric]));
+  const x = d3.scaleTime().domain([parse('2019-12'), parse('2030-12')]).range([m.l, W-m.r]);
+  const y = d3.scaleLinear().domain([0, d3.max(all)*1.08]).nice().range([H-m.b, m.t]);
+  const g = svg.append('g');
+  y.ticks(5).forEach(v=>{ g.append('line').attr('x1',m.l).attr('x2',W-m.r).attr('y1',y(v)).attr('y2',y(v)).style('stroke','var(--rule)');
+    g.append('text').attr('x',m.l-8).attr('y',y(v)+4).attr('text-anchor','end').style('fill','var(--muted)').style('font','12px JetBrains Mono, monospace').text(v>=1000?fmt.format(v/1000)+'k':fmt.format(v)); });
+  d3.range(2020,2031).forEach(yr=>{ const xx=x(new Date(yr,0,1)); g.append('text').attr('x',xx).attr('y',H-8).attr('text-anchor','middle').style('fill','var(--muted)').style('font','12px JetBrains Mono, monospace').text(yr); });
+  const x0 = x(parse('2026-10'));
+  g.append('rect').attr('x',x0).attr('y',m.t).attr('width',W-m.r-x0).attr('height',H-m.b-m.t).style('fill','var(--bg)');
+  g.append('line').attr('x1',x0).attr('x2',x0).attr('y1',m.t).attr('y2',H-m.b).style('stroke','var(--muted)').style('stroke-dasharray','4 4');
+  g.append('text').attr('x',x0-8).attr('y',m.t+14).attr('text-anchor','end').style('fill','var(--muted)').style('font','600 12px Source Sans 3, sans-serif').text('AMS-Daten');
+  g.append('text').attr('x',x0+8).attr('y',m.t+14).style('fill','var(--muted)').style('font','600 12px Source Sans 3, sans-serif').text('Simulation');
+  const line = d3.line().defined(d=>d[1]!=null).x(d=>x(d[0])).y(d=>y(d[1]));
+  g.append('path').attr('d', line(hm.map((d,i)=>[d,hv[i]]))).style('fill','none').style('stroke','var(--hist)').style('stroke-width',2.4);
+  const last = hv[hv.length-1];
+  const ends = [];
+  SK.filter(k=>on[k]).forEach(k=>{
+    const pts = [[parse('2026-10'), last]].concat(sm.map((d,i)=>[d,S[k][metric][i]]));
+    const p = g.append('path').attr('d', line(pts)).style('fill','none').style('stroke',`var(--${k.toLowerCase()})`)
+      .style('stroke-width', k===focus?3.2:1.8).style('opacity', k===focus?1:0.75);
+    if (animate && !RM){ const L=p.node().getTotalLength(); p.attr('stroke-dasharray',`${L} ${L}`).attr('stroke-dashoffset',L).transition().duration(1400).delay(SK.indexOf(k)*120).ease(d3.easeCubicOut).attr('stroke-dashoffset',0); }
+    const v = pts[pts.length-1][1]; ends.push({k, v, y:y(v)});
+  });
+  // Endlabels ohne Überlappung
+  ends.sort((a,b)=>a.y-b.y); for(let i=1;i<ends.length;i++) if(ends[i].y-ends[i-1].y<16) ends[i].y=ends[i-1].y+16;
+  ends.forEach(e=>{ g.append('text').attr('x',W-m.r+8).attr('y',e.y+4).style('fill',`var(--${e.k.toLowerCase()})`).style('font',`${e.k===focus?700:600} 12.5px Source Sans 3, sans-serif`).text(`${e.k} ${fmt.format(Math.round(e.v/1000))}k`); });
+  const f = S[focus];
+  d3.select('#sdesc').html(on[focus] ? `<b>${focus} · ${f.name}:</b> ${f.desc} Ø 2030: ${fmt.format(Math.round(f.y2030))} Arbeitslose, davon ${fmt.format(Math.round(f.hi2030))} mit Berufswunsch in hoch KI-exponierten Berufen.` : '');
+}
+
+// Gruppen-Tabelle
+const maxAbs = d3.max(D.impact, r=>Math.max(Math.abs(r.mod), Math.abs(r.strong)));
+const bw = v => `${Math.abs(v)/maxAbs*100}%`;
+let html = '', cur = '';
+D.impact.forEach(r=>{
+  if (r.dim!==cur){ cur=r.dim; html += `<tr class="grp"><td colspan="6">${cur}</td></tr>`; }
+  html += `<tr><td>${r.n}</td><td class="r">${fmt.format(r.base)}</td><td class="r">${pct(r.mod)}</td>
+    <td><div class="dv"><span style="left:0;width:${bw(r.strong)};background:var(--s3);opacity:.35"></span><span style="left:0;width:${bw(r.mod)};background:var(--s2)"></span></div></td>
+    <td class="r">${pct(r.strong)}</td><td class="r">${pct(r.train)}</td></tr>`;
+});
+d3.select('#imp').html(html);
+
+// Backtest
+(function(){
+  const svg=d3.select('#bt'), W=520, H=280, m={l:52,r:12,t:12,b:28};
+  const ms=D.bt.months.map(parse);
+  const all=D.bt.sim.concat(D.bt.obs);
+  const x=d3.scaleTime().domain(d3.extent(ms)).range([m.l,W-m.r]);
+  const y=d3.scaleLinear().domain([d3.min(all)*0.92, d3.max(all)*1.04]).nice().range([H-m.b,m.t]);
+  y.ticks(5).forEach(v=>{ svg.append('line').attr('x1',m.l).attr('x2',W-m.r).attr('y1',y(v)).attr('y2',y(v)).style('stroke','var(--rule)');
+    svg.append('text').attr('x',m.l-6).attr('y',y(v)+4).attr('text-anchor','end').style('fill','var(--muted)').style('font','11px JetBrains Mono, monospace').text(fmt.format(v/1000)+'k'); });
+  ['2025-01','2026-01'].forEach(s=>{ svg.append('text').attr('x',x(parse(s))).attr('y',H-8).attr('text-anchor','middle').style('fill','var(--muted)').style('font','11px JetBrains Mono, monospace').text(s.slice(0,4)); });
+  const ln=d3.line().x((d,i)=>x(ms[i])).y(d=>y(d));
+  svg.append('path').attr('d',ln(D.bt.obs)).style('fill','none').style('stroke','var(--hist)').style('stroke-width',2.2);
+  svg.append('path').attr('d',ln(D.bt.sim)).style('fill','none').style('stroke','var(--s2)').style('stroke-width',2.2).style('stroke-dasharray','6 3');
+})();
+let bh='', bc='';
+D.bt_rows.forEach(r=>{ if(r.dim!==bc){ bc=r.dim; bh+=`<tr class="grp"><td colspan="4">${bc}</td></tr>`; }
+  bh+=`<tr><td>${r.n}</td><td class="r">${fmt.format(r.sim)}</td><td class="r">${fmt.format(r.obs)}</td><td class="r" style="color:${Math.abs(r.err)>8?'var(--e2)':'inherit'}">${pct(r.err)}</td></tr>`; });
+d3.select('#btrows').html(bh);
+
+draw(true);
+</script>
+
+</body>
+</html>
